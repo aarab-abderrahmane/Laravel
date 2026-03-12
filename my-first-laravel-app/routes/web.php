@@ -22,6 +22,11 @@ Route::get('/mouad' , function (){
 
 Route::get('/blog' , [BlogController::class , "index"] );
 
+// Route::get('/blog/{id}' ,[BlogController::class , "show"]);
+
+Route::get('/blog/create' , [BlogController::class , "create"]);
+Route::post('/blog/store', [BlogController::class , "store"]);
+
 // Route::post('/mouad' , function (){
 
 // return "<h1>mouad</h1>" ; 
