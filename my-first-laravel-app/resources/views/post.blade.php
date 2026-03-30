@@ -9,7 +9,7 @@
 
 
     <div>
-
+            <a  href="/blog" >Go back <- </a>
             <h1>Post details </h1>
             <p><b>{{$post->title}}</b></p>
             <p>{{$post->body}}</p>
