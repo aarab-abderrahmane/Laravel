@@ -14,7 +14,7 @@ class Etudiant extends Model
 
     protected $fillable = ["nom" , "email" , "niveau" , "filiere" , "date_naissance"]; 
 
-    public function abcence(){
+    public function absences(){
 
         return $this->hasMany(Absences::class) ;
     } 

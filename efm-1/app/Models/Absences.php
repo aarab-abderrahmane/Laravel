@@ -11,6 +11,7 @@ class Absences extends Model
     /** @use HasFactory<\Database\Factories\AbsencesFactory> */
     use HasFactory;
 
+    public $timestamps = false ;
     protected $fillable= ["etudiant_id","date"] ; 
 
     public function etudiant(){

@@ -26,7 +26,7 @@ class EtudiantSeeder extends Seeder
             ]);
 
 
-            Etudiant::factory(10)->create() ; 
+            Etudiant::factory(10)->has(\App\Models\Absences::factory()->count(3))->create() ; 
 
     }
 }
