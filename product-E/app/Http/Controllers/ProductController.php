@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\http\Requests\StoreProductRequest ; 
+use App\Http\Requests\StoreProductRequest ; 
 use App\Models\Product ; 
-
+use App\Models\Categorie ; 
 
 class ProductController extends Controller
 {
@@ -16,29 +16,31 @@ class ProductController extends Controller
     public function index()
     {
 
-            $products = Product::all() ; 
-            return view('products.view') ; 
+        $products = Product::all() ; 
+        return view('products.indexj'  , compact("products")) ; 
 
-    }
+    }   
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
+
     {
-        return view('products.create');
+        $categories = Categorie::pluck('name' , "cat_id") ; 
+        return view('products.create' , compact("categories"));
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreProductRequest $request)
-    {
+    {   
         $validated = $request->validated() ; 
 
         Product::create($validated) ; 
 
-        return redirect()->route("porduct.index")->with('success' , "Product created successfully!") ; 
+        return redirect()->route("products.index")->with('success' , "Product created successfully!") ; 
 
     }
 

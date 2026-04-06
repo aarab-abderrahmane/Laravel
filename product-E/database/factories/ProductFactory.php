@@ -18,7 +18,11 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            "cat_id"=>\App\Models\Categorie::factory() ,    
+            "name"=>fake()->title(),
+            "description"=>fake()->paragraph() , 
+            "price"=>fake()->numberBetween(10.00 , 300.00)   , 
+
         ];
     }
 }

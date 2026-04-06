@@ -13,10 +13,12 @@ class CategorieSeeder extends Seeder
      */
     public function run(): void
     {
-        Categorie::create(
-            [
-                "name" => "Electronics",
-            ]
-        ) ;
+        // Categorie::create(
+        //     [
+        //         "name" => "Electronics",
+        //     ]
+        // ) ;
+
+        Categorie::factory(5)->create() ; 
     }
 }
