@@ -17,7 +17,7 @@ class ProductController extends Controller
     {
 
         $products = Product::all() ; 
-        return view('products.indexj'  , compact("products")) ; 
+        return view('products.index'  , compact("products")) ; 
 
     }   
 
@@ -58,25 +58,42 @@ class ProductController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
-    {
-        //
+    {   
+        $categories = Categorie::pluck('name' , "cat_id") ; 
+        $target_product = Product::find($id)  ; 
+        return view('products.edit' , ["product"=>$target_product , "categories"=>$categories]) ; 
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(StoreProductRequest $request , string $id)
     {
-        //
+        
+        $product  = Product::findOrFail($id) ; 
+
+        $validated = $request->validated()  ;
+
+        $product->update($validated) ;
+
+
+        return redirect()->route('products.index')->with('success' , 'product name '.$product->name.'updated successfully') ; 
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
         $target_product = Product::find($id) ; 
 
-        $target_product->destroy()  ; 
+        $target_product->delete()  ; 
+
+
+        // or :
+        // Product::destroy($id)
+
+        return redirect()->route('products.index')->with('delete' , "delete product successfully");
     }
 }

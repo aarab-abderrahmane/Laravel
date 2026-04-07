@@ -13,13 +13,19 @@
 
 
         <div>
-            <a class="border-1" href="/create">
+            <a class="border-1" href="/products/create">
                 create a new product
             </a>
 
             @if(session('success'))
                 <div class="alert alert-success">
                     {{session("success")}}
+                </div>
+            @endif
+
+            @if(session('delete'))
+                <div class="alert alert-warning">
+                    {{session("delete")}}
                 </div>
             @endif
         </div>
@@ -33,6 +39,13 @@
                     <h1>{{$product->name}}</h1>
                     <p>{{$product->description}}</p>
                     <p class="bg-success" ><b>{{$product->price}}DOLLAR</b></p>
+                    <a class="bg-primary text-black" href="/products/{{$product->id}}/edit">edit product</a>
+                    <form action="/products/{{$product->id}}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" >DELETE</button>
+
+                    </form>
 
                 </div>
             
