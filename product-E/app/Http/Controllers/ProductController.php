@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreProductRequest ; 
 use App\Models\Product ; 
 use App\Models\Categorie ; 
+use App\Models\Cart ; 
 
 class ProductController extends Controller
 {
@@ -15,9 +16,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-
+        $totoal_cartItems = Cart::count() ; 
         $products = Product::all() ; 
-        return view('products.index'  , compact("products")) ; 
+        return view('products.index'  , compact("products" , "totoal_cartItems")) ; 
 
     }   
 
