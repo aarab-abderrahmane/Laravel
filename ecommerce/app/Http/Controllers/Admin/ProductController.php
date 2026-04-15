@@ -45,4 +45,37 @@ class ProductController extends Controller
                 return redirect()->route('admin.products.index')->with('success' , "Product created!")  ; 
 
         }
+
+
+        public function edit($id){
+
+                $product = Product::findOrFail($id) ; 
+                $categroies = Category::pluck('name' , "id")  ;
+                return view('admin.product.edit' , compact('product' , 'categories')) ; 
+
+        }
+
+        public function update(Request $request  , Product $product){
+                
+                $validated = $request->validate([
+                        'cat_id'=>'required|exists:categories,id' , 
+                        'name'=>'required|string|min:10' , 
+                        "price"=>"required|numeric|between:10,500" , 
+                        "description"=>"nullable|string|max:255" , 
+                        "stock_quantity"=>"required|numeric|min:0|max:500" , 
+                        "image"=>"nullable|image" , 
+                        "is_active"=>"required|boolean" , 
+
+                ]) ; 
+                
+                $validated['slug']= str($request->name)->slug() ; 
+
+                if($request->hasFile('image')){
+                        $path = $request->file('image')->store('products' , "public") ; 
+                        $validated['image'] = $path ; 
+                }
+
+                $product->update($validated) ; 
+                return $redirect()->route('admin.products.index')->with('success', "Product updated successfully!");
+        }
 }
