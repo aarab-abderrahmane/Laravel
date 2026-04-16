@@ -10,7 +10,7 @@
 
         </div class="max-w-7xl mx-auto sm:px-6  ">
             <div class="bg-white p-6 shadow sm:rounded-lg   text-center  ">
-                    <form action="{{route('admin.products.update')}}" method="POST" enctype="multipart/form-data">
+                    <form action="{{route('admin.products.update', $product->id)}}" method="POST" enctype="multipart/form-data">
                         @method('PUT')
                         @csrf 
 
@@ -68,11 +68,11 @@
 
                         </div>
                     
-                        <select name="cat_id" value="{{ old('cat_id' , product->cat_id)  }}">
+                        <select name="cat_id" value="{{ old('cat_id' , $product->cat_id)  }}">
                             <option value="" selected disabled>select Category</option>
                             @foreach($categories as $id=> $name)
 
-                                <option value="{{ $id }}" >{{$name}}</option>
+                                <option value="{{ $id }}"  @selected($id===$product->cat_id)>{{$name}}</option>
 
                             @endforeach
 
@@ -110,12 +110,14 @@
                             <input
                                 type="checkbox"
                                 name="is_active"
-                                value="1" 
+                                value="1"
+
+                                @checked($product->is_active ===1 ) 
                             >
 
                         </div>
 
-                        <button type="submit" class="bg-green-500 text-black rounded-sm p-4 " >Save</button>
+                        <button type="submit" class="bg-blue-500 text-black rounded-sm p-4 " >Save</button>
 
 
 

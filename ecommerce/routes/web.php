@@ -29,6 +29,7 @@ Route::middleware(['auth'])->prefix("admin")->group(function(){
 
         Route::get('/products/{id}/edit' , [ProductController::class , "edit"])->name('admin.products.edit') ; 
         Route::put('/products/{product}' , [ProductController::class , "update"])->name('admin.products.update') ; 
+        Route::delete('/products/{product}' , [ProductController::class , "destroy"])->name('admin.products.destroy');
 })
 ;
 

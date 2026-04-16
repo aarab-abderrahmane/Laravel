@@ -35,6 +35,7 @@
                                 <th class="border p-2">Price</th>
                                 <th class="border p-2">Stock</th>
                                 <th class="border p-2">Status</th>
+                                <th class="border p-2">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,6 +47,20 @@
                                     <td class="border p-2">{{ $product->stock_quantity }}</td>
                                     <td class="border p-2">
                                         {{ $product->is_active ? '✅ Active' : '❌ Inactive' }}
+                                    </td>
+                                    <td class="flex gap-2">
+                                        <form action="{{ route('admin.products.destroy' , $product->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="bg-red-400 text-red-900 p-2">Delete</button>
+                                        </form>
+                                        <div class="flex-1 ">
+                                        <form action="{{ route('admin.products.edit' , $product->id) }}" method="GET">
+                                            @csrf
+                                            <button type="submit" class="w-full bg-blue-400 text-blue-900 p-2">EDIT</button>
+                                        </form>
+                                        </div>
+                                    
                                     </td>
                                 </tr>
                                 

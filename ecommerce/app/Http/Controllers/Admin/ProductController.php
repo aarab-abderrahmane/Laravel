@@ -50,8 +50,8 @@ class ProductController extends Controller
         public function edit($id){
 
                 $product = Product::findOrFail($id) ; 
-                $categroies = Category::pluck('name' , "id")  ;
-                return view('admin.product.edit' , compact('product' , 'categories')) ; 
+                $categories = Category::pluck('name' , "id")  ;
+                return view('admin.products.edit' , compact('product' , 'categories')) ; 
 
         }
 
@@ -76,6 +76,12 @@ class ProductController extends Controller
                 }
 
                 $product->update($validated) ; 
-                return $redirect()->route('admin.products.index')->with('success', "Product updated successfully!");
+                return redirect()->route('admin.products.index')->with('success', "Product updated successfully!");
+        }
+
+
+        public function destroy (Product $product){
+                $product->delete() ;
+                return redirect()->route('admin.products.index')->with('success' , "Product Deleted!") ;
         }
 }
