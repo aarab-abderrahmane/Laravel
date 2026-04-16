@@ -40,6 +40,12 @@ class ProductController extends Controller
                 ]) ; 
                 
                 $validated['slug'] = str($request->name)->slug() ; 
+
+                if($request->hasFile("image")){
+                        $path = $request->file('image')->store('products',"public") ;
+                        $validated["image"]= $path ; 
+                }
+
                 Product::create($validated) ; 
                 
                 return redirect()->route('admin.products.index')->with('success' , "Product created!")  ; 

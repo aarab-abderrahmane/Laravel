@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 //admin
 use App\Http\Controllers\Admin\ProductController; 
 
+use App\Http\Controllers\CartController ; 
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -32,5 +34,13 @@ Route::middleware(['auth'])->prefix("admin")->group(function(){
         Route::delete('/products/{product}' , [ProductController::class , "destroy"])->name('admin.products.destroy');
 })
 ;
+
+
+Route::resource('shop',\App\Http\Controllers\ProductController::class) ; 
+
+
+Route::get('/cart'  , [CartController::class , "index"])->name('cart.index');
+Route::post('/cart/{product}'  , [CartController::class , "add"])->name('cart.add');
+
 
 require __DIR__.'/auth.php';
