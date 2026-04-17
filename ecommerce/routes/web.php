@@ -44,12 +44,20 @@ Route::middleware(['auth' , "role:admin"])->prefix("admin")->group(function(){
 Route::resource('shop',\App\Http\Controllers\ProductController::class) ; 
 
 
-Route::get('/cart'  , [CartController::class , "index"])->name('cart.index');
+
+
+Route::prefix('cart')->name('cart.')->group(function(){
+
+    Route::get('/'  , [CartController::class , "index"])->name('index');
+    Route::post('/{product}/add'  , [CartController::class , "add"])->name('add');
+    Route::path('/{id}/update'  , [CartController::class , "update"])->name('update') ; 
+    Route::delete('/{id}/remove' , [CartController::class ,"remove"])->name('remove') ; 
+
+});
 
 
 Route::middleware(['auth' , "role:customer"])->group(function(){
 
-        Route::post('/cart/{product}'  , [CartController::class , "add"])->name('cart.add');
         Route::get('/my-orders' , [OrderController::class , "index"])->name('orders.index')  ; 
         Route::get('/my-orders/{id}', [OrderController::class, 'show'])->name('orders.show');
         Route::post('/my-orders', [OrderController::class, 'store'])->name('orders.store');

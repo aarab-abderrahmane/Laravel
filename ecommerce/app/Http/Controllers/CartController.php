@@ -29,6 +29,7 @@ class CartController extends Controller
                 }
 
                 $cart[$product->id]['quantity'] += $request->quantity ; 
+
             }else{
 
                 $cart[$product->id]=[
@@ -65,6 +66,30 @@ class CartController extends Controller
         $count = count($cart);
 
         return view('cart.index' , compact("cart" , "total" , "count")  ) ; 
+    }
+
+
+
+    public function update(Request $request , $id){
+
+        $product = Product::findOrFail($id) ; 
+        $cart = session()->get('cart' , []) ; 
+
+
+        $remaining_quantity  = $product->stock_quantity - $cart[$id]['quantity'] ; 
+        $request->validate([
+            'quantity'=>'required|string|max:'.$remaining_quantity
+        ]) ; 
+
+    
+
+        if(isset($cart[$id])){
+
+            
+            $cart[$id]['quantity'] += $request->quantity ; 
+
+        }
+
     }
 
 }
