@@ -3,6 +3,11 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <h1 class="text-2xl font-bold mb-6">Your Shopping Cart</h1>
 
+            @if (session("error"))
+                <p class="bg-red-300 text-red-900">{{session('error')}}</p>
+                
+            @endif
+
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                 <table class="w-full text-left">
                     <thead>
@@ -51,9 +56,23 @@
                             <p class="text-3xl font-bold text-indigo-600">${{ number_format($total, 2) }}</p>
                             
                             {{-- This link will trigger the Login/Checkout flow --}}
-                            <a href="#" class="mt-4 inline-block bg-indigo-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-indigo-700 transition">
-                                Proceed to Checkout
-                            </a>
+
+                            <form action="{{ route('orders.store') }}" method="POST">
+                                    <div class="flex flex-col">
+
+                                    <textarea name="address" placeholder="your address .." class="form-control"></textarea>
+                                    @error("address")
+                                        <p class="text-bold text-red-800">{{$message}}</p>
+                                    @enderror
+                                    <button
+                                    class="mt-4 inline-block bg-indigo-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-indigo-700 transition"
+                                    type="submit">
+
+                                        Proceed to Checkout
+                                    </button>
+                                    </div>
+                            </form>
+                     
                         </div>
                     </div>
                 @endif

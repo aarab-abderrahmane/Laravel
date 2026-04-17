@@ -1,6 +1,6 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="w-screen   mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
@@ -37,6 +37,17 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
+
+                        @auth
+
+                            @if(auth()->user()->role==="customer" && auth()->user()->orders()->exists())
+                                  <x-dropdown-link :href="route('orders.index')">
+                                       {{ __('Orders') }}
+                                </x-dropdown-link>
+                            @endif
+                        @endauth
+                      
+
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">

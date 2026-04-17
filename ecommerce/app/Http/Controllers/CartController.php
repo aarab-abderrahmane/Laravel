@@ -21,6 +21,13 @@ class CartController extends Controller
 
             if(isset($cart[$product->id])){
 
+                $total_quantity = $cart[$product->id]['quantity']  + $request->quantity ; 
+
+                if( $total_quantity >  $product->stock_quantity){
+
+                    return redirect()->back()->with('error' , "it reached  the maximum limit") ; 
+                }
+
                 $cart[$product->id]['quantity'] += $request->quantity ; 
             }else{
 
@@ -49,7 +56,15 @@ class CartController extends Controller
 
         $cart = session()->get("cart" , []) ; 
 
-        return view('cart.index' , compact("cart")) ; 
+        $total = array_reduce($cart , function($total , $item) {
+
+            return  $total += $item['quantity'] * $item['price'] ; 
+
+        } , 0) ; 
+
+        $count = count($cart);
+
+        return view('cart.index' , compact("cart" , "total" , "count")  ) ; 
     }
 
 }

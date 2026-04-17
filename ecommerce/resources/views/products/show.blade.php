@@ -1,9 +1,20 @@
 <x-guest-layout>
+
+    <x-slot name="header" >
+                    <a href={{ route('shop.index') }}><- Show all products </a>
+
+    </x-slot>
     <div class="py-12 bg-gray-50  mx-auto   max-w-xl">
+        @if( session('error'))
+                    
+            <p class="text-red-800">=========={{session('error')}}=================</p>
+
+
+        @endif
+
+        
         <div class=" sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-bold mb-8 text-gray-800">Our Products</h1>
             
-         
                     <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
                         <img src="{{ $product->image ? asset('storage/'.$product->image) : 'https://via.placeholder.com/300' }}" 
                              class="h-48 w-full object-cover">
