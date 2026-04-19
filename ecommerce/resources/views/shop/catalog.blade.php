@@ -68,45 +68,49 @@
 
 <section class="shop-container container">
     <aside class="sidebar">
-        <div class="filter-group">
-            <h3>Category</h3>
-            <ul class="filter-list">
-                @foreach($categories as $category)
+    {{-- Category Filter --}}
+    <div class="filter-group">
+        <h3>Category</h3>
+        <ul class="filter-list">
+            @foreach($categories as $category)
                 <label class="filter-item">
                     <input type="checkbox" name="category[]" value="{{ $category->id }}" class="filter-checkbox"
                         {{ in_array($category->id, (array) request('category', [])) ? 'checked' : '' }}>
                     <span>{{ $category->name }}</span>
                 </label>
-                @endforeach
-            </ul>
-        </div>
+            @endforeach
+        </ul>
+    </div>
 
-        <div class="filter-group">
-            <h3>Origin</h3>
-            <ul class="filter-list">
-                @foreach($origins as $origin)
+    {{-- Origin Filter --}}
+    <div class="filter-group">
+        <h3>Origin</h3>
+        <ul class="filter-list">
+            @foreach($origins as $origin)
                 <label class="filter-item">
                     <input type="checkbox" name="origin[]" value="{{ $origin }}" class="filter-checkbox"
                         {{ in_array($origin, (array) request('origin', [])) ? 'checked' : '' }}>
                     <span>{{ $origin }}</span>
                 </label>
-                @endforeach
-            </ul>
-        </div>
+            @endforeach
+        </ul>
+    </div>
 
-        <div class="filter-group">
-            <h3>Tone</h3>
-            <ul class="filter-list">
-                @foreach(['Warm Earth', 'Muted Ash', 'Raw Natural'] as $tone)
+    {{-- Material Filter --}}
+    <div class="filter-group">
+        <h3>Material</h3>
+        <ul class="filter-list">
+            @foreach($materials as $material)
                 <label class="filter-item">
-                    <input type="checkbox" name="tone[]" value="{{ $tone }}" class="filter-checkbox"
-                        {{ in_array($tone, (array) request('tone', [])) ? 'checked' : '' }}>
-                    <span>{{ $tone }}</span>
+                    <input type="checkbox" name="material[]" value="{{ $material }}" class="filter-checkbox"
+                        {{ in_array($material, (array) request('material', [])) ? 'checked' : '' }}>
+                    <span>{{ $material }}</span>
                 </label>
-                @endforeach
-            </ul>
-        </div>
-    </aside>
+            @endforeach
+        </ul>
+    </div>
+
+</aside>
 
     <div class="products-area">
         <div class="sorting-bar">

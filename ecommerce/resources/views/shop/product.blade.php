@@ -3,14 +3,17 @@
 @section('title', $product->name . ' — Aura Studio')
 
 @push('styles')
+@vite(['resources/css/product.css'])
 <style>
-    /* Additional styles specific to product page if needed */
+    
     .rating i.active { color: var(--text-main); }
     .rating i.inactive { color: var(--border-color); }
 </style>
 @endpush
 
 @section('content')
+
+<div class="product-page">
     {{-- Product Hero Section --}}
     <section class="product-hero container">
         <div class="grid-12">
@@ -259,7 +262,7 @@
         <div class="section-header">
             <h2>Curated companions</h2>
         </div>
-        <div class="product-grid">
+        <div class="related-products-grid">
             @foreach($relatedProducts as $related)
                 <x-product-card :product="$related" />
             @endforeach
@@ -297,6 +300,8 @@
         </div>
     </div>
     @endauth
+
+</div>
 @endsection
 
 @push('scripts')

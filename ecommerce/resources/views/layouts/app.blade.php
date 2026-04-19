@@ -65,19 +65,27 @@
         .container {
             max-width: var(--container-width);
             margin: 0 auto;
-            padding: 0 var(--gutter);
+            padding: 30px var(--gutter);
+            
         }
 
         /* ==========================================================================
           header and topbar
            ========================================================================== */
+
+        .top-bar-container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0px var(--gutter);  
+        }
+
         .top-bar {
             background-color: var(--text-main);
             border-bottom: 1px solid var(--border-color);
             padding: 8px 0;
             font-size: 12px;
         }
-        .top-bar .container {
+        .top-bar .top-bar-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -95,11 +103,19 @@
             top: 0;
             z-index: 100;
         }
-        .main-header .container {
+
+        .header-container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0px var(--gutter);  
+        }
+
+        .main-header .header-container {
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
+
         .logo {
             font-size: 24px;
             font-weight: 500;
@@ -488,7 +504,7 @@
 <body>
 
     <div class="top-bar">
-        <div class="container">
+        <div class="top-bar-container">
             <div style="display: flex; gap: 16px;">
                 <p>EN / USD</p>
                 <p>Need help? +1 800 123 4567</p>
@@ -498,13 +514,11 @@
     </div>
 
     <header class="main-header">
-    <div class="container">
+    <div class="header-container">
         <a href="{{ url('/') }}" class="logo">Aura.</a>
         
         <nav class="nav-links">
-            <a href="{{ route('shop.catalog') }}">Men</a>
-            <a href="{{ route('shop.catalog') }}">Women</a>
-            <a href="{{ route('shop.catalog') }}" class="{{ request()->routeIs('shop.catalog') ? 'active' : '' }}">Objects</a>
+            <a href="{{ route('shop.catalog') }}" class="{{ request()->routeIs('shop.catalog') ? 'active' : '' }}">Shop</a>
             <a href="#">Editorial</a>
         </nav>
 

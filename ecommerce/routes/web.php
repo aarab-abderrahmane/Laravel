@@ -12,9 +12,9 @@ use App\Http\Controllers\OrderController ;
 
 use App\Http\Controllers\Shop\CatalogController ; 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+use App\Http\Controllers\HomeController ; 
+
+Route::get('/', [HomeController::class , "index"])->name('home');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

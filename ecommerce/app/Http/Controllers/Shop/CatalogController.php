@@ -13,6 +13,9 @@ class CatalogController extends Controller
     {
         // Get all categories for filter sidebar
         $categories = Category::all();
+        $origins = Product::distinct()->pluck('origin')->filter()->values();
+        $materials  = Product::distinct()->pluck('material')->filter()->values() ; 
+
 
         // Query products with filters
         $products = Product::query()
@@ -23,6 +26,9 @@ class CatalogController extends Controller
             })
             ->when($request->filled('origin'), function ($query) use ($request) {
                 $query->whereIn('origin', (array) $request->origin);
+            })
+            ->when($request->filled('material') , function($query) use ($request){
+                $query->whereIn('material' , (array) $request->material) ; 
             })
             ->when($request->filled('sort'), function ($query) use ($request) {
                 match ($request->sort) {
@@ -37,8 +43,7 @@ class CatalogController extends Controller
             ->paginate(9)
             ->withQueryString(); // Keep filter parameters in pagination links
 
-        $origins = Product::distinct()->pluck('origin')->filter()->values();
 
-        return view('shop.catalog', compact('products', 'categories' , "origins"));
+        return view('shop.catalog', compact('products', 'categories' , "origins" , "materials"));
     }
 }
