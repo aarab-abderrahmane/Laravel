@@ -11,82 +11,45 @@ class OrderController extends Controller
 {
     
 
-        public function store(Request $request){
+        /**
+     * show orders
+     */
+    public function index()
+    {
+        $orders = auth()->user()->orders()->latest()->paginate(10);
+        return view('orders.index', compact('orders'));
+    }
 
-            $validates = $request->validate([
-                "address"=>"required|string|min:10"
-            ]);
-
-
-            $cart = session()->get('cart') ; 
-            if(!$cart){
-
-                    return redirect()->back()->with('error' , "Cart is empty!") ; 
-
-            }
-
-
-            $order = Order::create([
-                    "user_id"=> auth()->user()->id , 
-                    "total_amount" => array_reduce($cart  , fn($total , $item ) =>  $total+ ($item['price'] * $item['quantity']) , 0) , 
-                    "address" =>  $request->address , 
-                    "status"=>"pending" , 
-
-            ]) ; 
-
-
-            foreach($cart as $id=> $details){
-
-                    OrderItem::create([
-                        'order_id' => $order->id , 
-                        "product_id"=>$id , 
-                        "quantity" => $details['quantity'] , 
-                        "price" => $details["price"] , 
-
-                    ]); 
-
-                    $product = Product::find($id) ; 
-                    $product->decrement("stock_quantity" , $details['quantity']) ; 
-
-
-            }
-
-
-            session()->forget("cart")  ; 
-            return redirect()->route('orders.index')  ;   
-
-
-
-            
-
-
-
+    /**
+     * order detail
+     */
+    public function show( $order)
+    {    
+        $order = Order::findOrFail($order) ; 
+        if ($order->user_id !== auth()->id()) {
+            abort(403);
         }
 
+        $order->load('items.product');
 
+        $progressWidth = $this->calculateProgressWidth($order->status);
 
-        public function index(){
+        return view('orders.show', compact('order', 'progressWidth'));
+    }
 
-
-                $orders = auth()->user()->orders()->latest()->paginate(20) ; 
-                
-                // isEmpty() method on the paginator , because Paginator object never empty 
-                if($orders->isEmpty()){
-
-                        return redirect()->route('cart.index')->with('info' , "you cart is empty! add some products first.") ; 
-                }
-
-                return view('orders.index' , compact("orders")) ; 
-        }
-
-
-        public function show($id){      
-
-                $order = auth()->user()->orders()->with('items.product')->findOrFail($id) ;
-
-                return view('orders.show', compact("order"))  ; 
-
-        }
+    /**
+     * calculate progress
+     */
+    private function calculateProgressWidth(string $status): int
+    {
+        return match ($status) {
+            'pending' => 25,
+            'processing' => 50,
+            'shipped' => 75,
+            'delivered' => 100,
+            default => 0,
+        };
+    }
 
 
 }

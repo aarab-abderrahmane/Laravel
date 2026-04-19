@@ -1,67 +1,165 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Order #{{ $order->id }} Details
-            </h2>
-            <a href="{{ route('orders.index') }}" class="text-sm text-indigo-600 hover:underline">&larr; Back to My Orders</a>
-        </div>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 border-l-4 {{ $order->status == 'completed' ? 'border-green-500' : 'border-yellow-500' }}">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div>
-                        <p class="text-gray-500 text-sm uppercase font-bold">Status</p>
-                        <p class="text-lg font-semibold">{{ strtoupper($order->status) }}</p>
-                    </div>
-                    <div>
-                        <p class="text-gray-500 text-sm uppercase font-bold">Date Placed</p>
-                        <p class="text-lg font-semibold">{{ $order->created_at->format('M d, Y h:i A') }}</p>
-                    </div>
-                    <div>
-                        <p class="text-gray-500 text-sm uppercase font-bold">Total Amount</p>
-                        <p class="text-lg font-bold text-indigo-600">${{ number_format($order->total_amount, 2) }}</p>
-                    </div>
+@section('title', 'Order #' . $order->order_number . ' — Aura Studio')
+
+@push('styles')
+    @vite(['resources/css/order-details.css'])
+@endpush
+
+@section('content')
+<div class="order-details-page container">
+    <div class="page-header">
+        <a href="{{ route('orders.index') }}" class="back-link">
+            <i class="iconoir-arrow-left"></i> Back to all orders
+        </a>
+        <h1>
+            Order #{{ $order->order_number }}
+            <span class="badge badge-{{ $order->status === 'delivered' ? 'delivered' : ($order->status === 'shipped' ? 'shipped' : 'pending') }}">
+                {{ ucfirst($order->status) }}
+            </span>
+        </h1>
+        <p>Placed on {{ $order->created_at->format('d F Y') }} at {{ $order->created_at->format('H:i') }}</p>
+    </div>
+
+    <div class="order-layout">
+        <div class="main-column">
+            {{-- Tracking Timeline --}}
+            <div class="card">
+                <div class="card-header">
+                    <h2>Tracking status</h2>
+                    <p>Estimated delivery: {{ $order->created_at->addDays(5)->format('d F Y') }}</p>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-progress" style="width: {{ $progressWidth }}%;"></div>
+
+                    @php
+                        $steps = [
+                            'pending' => ['Order placed', 'iconoir-check'],
+                            'processing' => ['Processing', 'iconoir-settings'],
+                            'shipped' => ['Shipped', 'iconoir-package'],
+                            'delivered' => ['Delivered', 'iconoir-home'],
+                        ];
+                        $statuses = array_keys($steps);
+                        $currentIndex = array_search($order->status, $statuses);
+                    @endphp
+
+                    @foreach($steps as $status => $label)
+                        @php
+                            $stepIndex = array_search($status, $statuses);
+                            $isCompleted = $stepIndex < $currentIndex;
+                            $isCurrent = $status === $order->status;
+                        @endphp
+                        <div class="timeline-step">
+                            <div class="step-dot {{ $isCompleted ? 'active' : '' }} {{ $isCurrent ? 'current' : '' }}">
+                                @if($isCompleted)
+                                    <i class="iconoir-check"></i>
+                                @endif
+                            </div>
+                            <div class="step-text {{ $isCompleted || $isCurrent ? 'active-text' : '' }}">
+                                {{ $label[0] }}
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <h3 class="text-lg font-bold mb-4 border-b pb-2">Shipping Address</h3>
-                <p class="text-gray-700 whitespace-pre-line">{{ $order->address }}</p>
+            {{-- Items Ordered --}}
+            <div class="card">
+                <div class="card-header">
+                    <h2>Items in this order</h2>
+                </div>
+
+                <div class="product-list">
+                    @foreach($order->items as $item)
+                        <div class="product-row">
+                            <div class="product-image">
+                                @if($item->product && $item->product->images && isset($item->product->images[0]))
+                                    <img src="{{ $item->product->images[0] }}" alt="{{ $item->product_name }}">
+                                @else
+                                    <i class="iconoir-camera" style="font-size: 24px; opacity: 0.3;"></i>
+                                @endif
+                            </div>
+                            <div class="product-details">
+                                <h3>{{ $item->product_name }}</h3>
+                                <p class="meta-text">
+                                    {{ $item->product->material ?? 'Material' }} • {{ $item->product->origin ?? 'Origin' }}
+                                </p>
+                                <p class="meta-text" style="margin-top: 4px;">Price: ${{ number_format($item->unit_price, 2) }}</p>
+                            </div>
+                            <div class="product-price-info">
+                                <div class="qty">Qty: {{ $item->quantity }}</div>
+                                <div class="subtotal">${{ number_format($item->total_price, 2) }}</div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        <div class="side-column">
+            {{-- Order Summary --}}
+            <div class="card">
+                <div class="card-header">
+                    <h2>Order summary</h2>
+                </div>
+
+                <div class="summary-row">
+                    <span>Subtotal ({{ $order->items->sum('quantity') }} items)</span>
+                    <span>${{ number_format($order->total_amount, 2) }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span>Free</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span>${{ number_format($order->total_amount, 2) }}</span>
+                </div>
             </div>
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <h3 class="text-lg font-bold mb-4 border-b pb-2">Items Purchased</h3>
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="text-gray-500 text-sm">
-                            <th class="py-2">Product</th>
-                            <th class="py-2 text-center">Quantity</th>
-                            <th class="py-2 text-right">Unit Price</th>
-                            <th class="py-2 text-right">Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($order->items as $item)
-                        <tr class="border-b last:border-0">
-                            <td class="py-4">
-                                <div class="flex items-center">
-                                    <img src="{{ asset('storage/' . $item->product->image) }}" class="w-12 h-12 object-cover rounded mr-4">
-                                    <span class="font-medium text-gray-900">{{ $item->product->name }}</span>
-                                </div>
-                            </td>
-                            <td class="py-4 text-center">{{ $item->quantity }}</td>
-                            <td class="py-4 text-right">${{ number_format($item->price, 2) }}</td>
-                            <td class="py-4 text-right font-bold">${{ number_format($item->price * $item->quantity, 2) }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            {{-- Details --}}
+            <div class="card">
+                <div class="card-header">
+                    <h2>Details</h2>
+                </div>
+
+                <div class="info-block">
+                    <h3>Shipping Address</h3>
+                    {!! nl2br(e($order->shipping_address)) !!}
+                </div>
+
+                <div class="info-block" style="margin-bottom: 0;">
+                    <h3>Payment Method</h3>
+                    <p>
+                        @if($order->payment_method === 'cod')
+                            Cash on Delivery
+                        @elseif($order->payment_method === 'cc')
+                            Credit Card
+                        @else
+                            PayPal
+                        @endif
+                    </p>
+                    <p style="margin-top: 8px;">
+                        <span class="badge badge-paid" style="font-size: 0.75rem;">{{ ucfirst($order->payment_status) }}</span>
+                    </p>
+                </div>
             </div>
 
+            {{-- Actions --}}
+            <div>
+                <button class="btn btn-primary"><i class="iconoir-delivery-truck"></i> Track shipment</button>
+                <button class="btn btn-ghost"><i class="iconoir-download"></i> Download invoice</button>
+                <button class="btn-danger-link">Report an issue</button>
+            </div>
+
+            {{-- Support Box --}}
+            <div class="support-box">
+                <h3>Need help with this order?</h3>
+                <p style="margin-bottom: 16px; font-size: 0.875rem;">Our team is here for you.</p>
+                <a href="#" style="color: var(--text-main); font-weight: 500; font-size: 0.875rem;">Contact Support →</a>
+            </div>
         </div>
     </div>
-</x-app-layout>
+</div>
+@endsection

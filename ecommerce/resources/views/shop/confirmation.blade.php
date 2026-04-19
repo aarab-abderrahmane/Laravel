@@ -99,7 +99,7 @@
             <p>We've received your order. You will receive a confirmation email shortly with your receipt and shipping updates.</p>
             <div class="action-buttons">
                 <a href="{{ route('shop.catalog') }}" class="btn-filled">Continue Shopping</a>
-                <a href="{{ route('orders.show', $order) }}" class="btn-ghost">View Order Details</a>
+                <a href="{{ route('orders.show',  $order->order_number) }}" class="btn-ghost">View Order Details</a>
             </div>
         </div>
 

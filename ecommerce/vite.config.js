@@ -12,6 +12,7 @@ export default defineConfig({
                 "resources/css/profile.css", 
                 "resources/css/checkout.css", 
                 "resources/css/confirmation.css", 
+                'resources/css/order-details.css',
                 'resources/js/app.js'
                 ],
             refresh: true,
