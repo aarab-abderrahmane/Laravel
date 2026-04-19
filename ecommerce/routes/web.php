@@ -11,6 +11,7 @@ use App\Http\Controllers\OrderController ;
 
 use App\Http\Controllers\Shop\CatalogController ; 
 use App\Http\Controllers\Shop\CartController ; 
+use App\Http\Controllers\Shop\CheckoutController ; 
 
 
 use App\Http\Controllers\HomeController ; 
@@ -67,11 +68,14 @@ Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
 
     
 Route::middleware(['auth' , "role:customer"])->group(function(){
+        
+        Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+        Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+        Route::get('/order/thank-you/{order}', [CheckoutController::class, 'confirmation'])->name('checkout.confirmation');
 
         Route::get('/my-orders' , [OrderController::class , "index"])->name('orders.index')  ; 
         Route::get('/my-orders/{id}', [OrderController::class, 'show'])->name('orders.show');
         Route::post('/my-orders', [OrderController::class, 'store'])->name('orders.store');
-
 });
 
 // Catalog : 

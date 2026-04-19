@@ -93,7 +93,7 @@
                     </div>
                     
                     {{-- {{ route('checkout.index') }} --}}
-                    <a href="#" class="btn btn-primary" style="display: block; margin-bottom: 16px;">Proceed to checkout</a>
+                    <a href="{{ route('checkout.index') }}" class="btn btn-primary" style="display: block; margin-bottom: 16px;">Proceed to checkout</a>
                     <a href="{{ route('shop.catalog') }}" class="btn btn-ghost" style="display: block;">Continue shopping</a>
 
                     {{-- Promo Code --}}
