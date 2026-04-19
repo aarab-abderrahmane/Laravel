@@ -1,0 +1,271 @@
+/* ==========================================================================
+   PROFILE PAGE SPECIFIC STYLES
+   ========================================================================== */
+
+.profile-page {
+    padding-bottom: 60px;
+}
+
+/* Profile Layout */
+.profile-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 64px;
+    margin-bottom: 120px;
+}
+
+/* Sidebar */
+.profile-sidebar {
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+}
+
+.user-info-small {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.avatar-small {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.avatar-small img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sidebar-menu {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: var(--text-secondary);
+    border-radius: 6px;
+    transition: var(--transition);
+}
+
+.sidebar-menu a:hover {
+    background: var(--surface-color);
+    color: var(--text-main);
+}
+
+.sidebar-menu a.active {
+    background: var(--surface-color);
+    color: var(--text-main);
+    font-weight: 500;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.sidebar-menu i {
+    font-size: 1.25rem;
+}
+
+/* Main Content */
+.profile-content {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+}
+
+.profile-card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 40px;
+}
+
+.profile-card-header {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.profile-card-header h2 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Forms */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    font-size: 0.875rem;
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+.form-control {
+    padding: 14px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 1rem;
+    background: transparent;
+    color: var(--text-main);
+    outline: none;
+    transition: border-color var(--transition);
+}
+
+.form-control:focus {
+    border-color: var(--text-main);
+}
+
+.form-control[readonly] {
+    background: var(--bg-color);
+    cursor: not-allowed;
+}
+
+/* Avatar Upload */
+.avatar-upload {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.avatar-large {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.avatar-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Addresses */
+.address-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.address-card {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 24px;
+}
+
+.address-card h3 {
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.address-actions {
+    margin-top: 24px;
+    display: flex;
+    gap: 16px;
+    font-size: 0.875rem;
+}
+
+.address-actions a,
+.address-actions button {
+    color: var(--text-secondary);
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.address-actions a:hover,
+.address-actions button:hover {
+    color: var(--text-main);
+}
+
+/* Danger Zone */
+.danger-zone {
+    border-color: #F0D9D0;
+}
+
+.danger-zone .profile-card-header h2 {
+    color: var(--accent-clay);
+}
+
+.btn-danger {
+    background-color: transparent;
+    color: var(--accent-clay);
+    border: 1px solid var(--accent-clay);
+}
+
+.btn-danger:hover {
+    background-color: var(--accent-clay);
+    color: var(--surface-color);
+    opacity: 1;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 32px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .profile-layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    .profile-sidebar {
+        position: static;
+        display: flex;
+        overflow-x: auto;
+        padding-bottom: 16px;
+    }
+    .user-info-small {
+        display: none;
+    }
+    .sidebar-menu {
+        flex-direction: row;
+    }
+    .sidebar-menu a {
+        white-space: nowrap;
+    }
+    .form-row,
+    .address-grid {
+        grid-template-columns: 1fr;
+    }
+}

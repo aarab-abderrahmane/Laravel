@@ -6,11 +6,12 @@ use Illuminate\Support\Facades\Route;
 //admin
 use App\Http\Controllers\Admin\ProductController; 
 
-use App\Http\Controllers\CartController ; 
 
 use App\Http\Controllers\OrderController ; 
 
 use App\Http\Controllers\Shop\CatalogController ; 
+use App\Http\Controllers\Shop\CartController ; 
+
 
 use App\Http\Controllers\HomeController ; 
 
@@ -25,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 });
 
 
@@ -48,14 +50,20 @@ Route::middleware(['auth' , "role:admin"])->prefix("admin")->group(function(){
 
 
 
-Route::prefix('cart')->name('cart.')->group(function(){
+// Route::prefix('cart')->name('cart.')->group(function(){
 
-    Route::get('/'  , [CartController::class , "index"])->name('index');
-    Route::post('/{product}/add'  , [CartController::class , "add"])->name('add');
-    Route::patch('/{id}/update'  , [CartController::class , "update"])->name('update') ; 
-    Route::delete('/{id}/remove' , [CartController::class ,"remove"])->name('remove') ; 
+//     Route::get('/'  , [CartController::class , "index"])->name('index');
+//     Route::post('/{product}/add'  , [CartController::class , "add"])->name('add');
+//     Route::patch('/{id}/update'  , [CartController::class , "update"])->name('update') ; 
+//     Route::delete('/{id}/remove' , [CartController::class ,"remove"])->name('remove') ; 
 
-});
+// });
+
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
+Route::patch('/cart/{item}', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/{item}', [CartController::class, 'remove'])->name('cart.remove');
+Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
 
     
 Route::middleware(['auth' , "role:customer"])->group(function(){

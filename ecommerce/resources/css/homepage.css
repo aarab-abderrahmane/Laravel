@@ -390,6 +390,40 @@
     color: var(--text-secondary);
 }
 
+
+
+
+/* Accordion Filter Groups */
+.filter-group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.filter-group-header h3 {
+    margin-bottom: 0;
+}
+
+.accordion-icon {
+    font-size: 16px;
+    transition: transform 0.2s ease;
+}
+
+.filter-group.collapsed .accordion-icon {
+    transform: rotate(-90deg);
+}
+
+.filter-group.collapsed .filter-group-content {
+    display: none;
+}
+
+.filter-group-content {
+    margin-top: 16px;
+}
+
+
 /* ==========================================================================
    RESPONSIVE DESIGN
    ========================================================================== */
@@ -429,3 +463,6 @@
         flex-direction: column;
     }
 }
+
+
+

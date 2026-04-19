@@ -481,6 +481,37 @@
             border: 1px solid var(--text-main);
         }
 
+        /* Accordion Filter Groups */
+.filter-group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.filter-group-header h3 {
+    margin-bottom: 0;
+}
+
+.accordion-icon {
+    font-size: 16px;
+    transition: transform 0.2s ease;
+}
+
+.filter-group.collapsed .accordion-icon {
+    transform: rotate(-90deg);
+}
+
+.filter-group.collapsed .filter-group-content {
+    display: none;
+}
+
+.filter-group-content {
+    margin-top: 16px;
+}
+
+
         /* ==========================================================================
           responsive 
            ========================================================================== */
@@ -600,5 +631,42 @@
     </footer>
 
     @stack('scripts')
+<script>
+    function quickAdd(productId) {
+    fetch(`/cart/add/${productId}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ quantity: 1 })
+    })
+    .then(async response => {
+        const text = await response.text();
+        console.log('Response status:', response.status);
+        console.log('Response text:', text);
+        try {
+            return JSON.parse(text);
+        } catch (e) {
+            console.error('Invalid JSON response');
+            return { success: false };
+        }
+    })
+    .then(data => {
+        console.log('Parsed data:', data);
+        if (data.success) {
+            alert('Product added to cart');
+        } else {
+            alert('Could not add product');
+        }
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+        alert('An error occurred');
+    });
+}
+
+</script>
 </body>
 </html>

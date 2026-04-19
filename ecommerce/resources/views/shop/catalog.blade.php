@@ -67,50 +67,69 @@
 </section>
 
 <section class="shop-container container">
-    <aside class="sidebar">
-    {{-- Category Filter --}}
+
+    <form id="filter-form" method="GET" action="{{ route('shop.catalog') }}">
+        @if(request('sort'))
+            <input type="hidden" name="sort" value="{{ request('sort') }}">
+        @endif
+
+        <aside class="sidebar">
+    {{-- Category Filter  --}}
     <div class="filter-group">
-        <h3>Category</h3>
-        <ul class="filter-list">
+        <div class="filter-group-header" onclick="toggleFilterGroup(this)">
+            <h3>Category</h3>
+            <i class="iconoir-nav-arrow-down accordion-icon"></i>
+        </div>
+        <ul class="filter-list filter-group-content">
             @foreach($categories as $category)
                 <label class="filter-item">
                     <input type="checkbox" name="category[]" value="{{ $category->id }}" class="filter-checkbox"
-                        {{ in_array($category->id, (array) request('category', [])) ? 'checked' : '' }}>
+                        {{ in_array($category->id, (array) request('category', [])) ? 'checked' : '' }}
+                        onchange="this.form.submit()">
                     <span>{{ $category->name }}</span>
                 </label>
             @endforeach
         </ul>
     </div>
 
-    {{-- Origin Filter --}}
-    <div class="filter-group">
-        <h3>Origin</h3>
-        <ul class="filter-list">
+    {{-- Origin Filter  --}}
+    <div class="filter-group ">
+        <div class="filter-group-header" onclick="toggleFilterGroup(this)">
+            <h3>Origin</h3>
+            <i class="iconoir-nav-arrow-down accordion-icon"></i>
+        </div>
+        <ul class="filter-list filter-group-content">
             @foreach($origins as $origin)
                 <label class="filter-item">
                     <input type="checkbox" name="origin[]" value="{{ $origin }}" class="filter-checkbox"
-                        {{ in_array($origin, (array) request('origin', [])) ? 'checked' : '' }}>
+                        {{ in_array($origin, (array) request('origin', [])) ? 'checked' : '' }}
+                        onchange="this.form.submit()">
                     <span>{{ $origin }}</span>
                 </label>
             @endforeach
         </ul>
     </div>
 
-    {{-- Material Filter --}}
-    <div class="filter-group">
-        <h3>Material</h3>
-        <ul class="filter-list">
+    {{-- Material Filter  --}}
+    <div class="filter-group collapsed">
+        <div class="filter-group-header" onclick="toggleFilterGroup(this)">
+            <h3>Material</h3>
+            <i class="iconoir-nav-arrow-down accordion-icon"></i>
+        </div>
+        <ul class="filter-list filter-group-content">
             @foreach($materials as $material)
                 <label class="filter-item">
                     <input type="checkbox" name="material[]" value="{{ $material }}" class="filter-checkbox"
-                        {{ in_array($material, (array) request('material', [])) ? 'checked' : '' }}>
+                        {{ in_array($material, (array) request('material', [])) ? 'checked' : '' }}
+                        onchange="this.form.submit()">
                     <span>{{ $material }}</span>
                 </label>
             @endforeach
         </ul>
     </div>
-
 </aside>
+    </form>
+
 
     <div class="products-area">
         <div class="sorting-bar">
@@ -152,3 +171,19 @@
     @endforeach
 </form>
 @endsection
+
+
+@push('scripts')
+<script>
+    function toggleFilterGroup(header) {
+        const group = header.closest('.filter-group');
+        group.classList.toggle('collapsed');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.filter-group.collapsed .accordion-icon').forEach(icon => {
+            icon.style.transform = 'rotate(-90deg)';
+        });
+    });
+</script>
+@endpush

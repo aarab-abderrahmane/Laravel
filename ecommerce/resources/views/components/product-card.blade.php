@@ -9,7 +9,8 @@
                 <i class="iconoir-camera placeholder-icon"></i>
             @endif
             <button class="quick-add-btn" aria-label="Quick add"
-                    onclick="event.preventDefault(); quickAdd({{ $product->id }})">
+                    data-product-id="{{ $product->id }}"
+                    onclick="event.preventDefault(); event.stopPropagation(); quickAdd({{ $product->id }})">
                 <i class="iconoir-plus"></i>
             </button>
         </div>
