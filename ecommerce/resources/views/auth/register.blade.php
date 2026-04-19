@@ -1,52 +1,58 @@
-<x-guest-layout>
+@extends('layouts.auth')
+
+@section('title', 'Create account — Aura Studio')
+
+@section('content')
+    <h1>Create account</h1>
+    <p style="margin-bottom: 32px;">Join our community of mindful curators.</p>
+
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+        {{-- Name --}}
+        <div class="form-group">
+            <label for="name">Full name</label>
+            <input id="name" type="text" name="name" value="{{ old('name') }}" placeholder="Arlo Jensen" required>
+            @error('name')
+                <span style="color: var(--accent-terracotta); font-size: 12px;">{{ $message }}</span>
+            @enderror
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        {{-- Email --}}
+        <div class="form-group">
+            <label for="email">Email address</label>
+            <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="name@email.com" required>
+            @error('email')
+                <span style="color: var(--accent-terracotta); font-size: 12px;">{{ $message }}</span>
+            @enderror
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        {{-- Password --}}
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" type="password" name="password" placeholder="Min. 8 characters" required>
+            @error('password')
+                <span style="color: var(--accent-terracotta); font-size: 12px;">{{ $message }}</span>
+            @enderror
         </div>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        {{-- Confirm Password --}}
+        <div class="form-group">
+            <label for="password_confirmation">Confirm password</label>
+            <input id="password_confirmation" type="password" name="password_confirmation" placeholder="Re-enter password" required>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
+        <label class="checkbox-container" style="margin-bottom: 24px;">
+            <input type="checkbox" name="terms" required>
+            <div class="custom-check"></div>
+            <span style="line-height: 1.4;">I agree to the <a href="#" class="text-link">Terms of Service</a> and <a href="#" class="text-link">Privacy Policy</a></span>
+        </label>
 
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
+        <button type="submit" class="btn-submit">Create account</button>
     </form>
-</x-guest-layout>
+
+    <p style="margin-top: 32px; text-align: center; font-size: 14px;">
+        Already have an account? 
+        <a href="{{ route('login') }}" class="text-link" style="font-weight: 500;">Sign in</a>
+    </p>
+@endsection

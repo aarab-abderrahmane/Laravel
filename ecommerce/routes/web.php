@@ -10,6 +10,8 @@ use App\Http\Controllers\CartController ;
 
 use App\Http\Controllers\OrderController ; 
 
+use App\Http\Controllers\Shop\CatalogController ; 
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -41,7 +43,7 @@ Route::middleware(['auth' , "role:admin"])->prefix("admin")->group(function(){
 ;
 
 
-Route::resource('shop',\App\Http\Controllers\ProductController::class) ; 
+// Route::resource('shop',\App\Http\Controllers\ProductController::class) ; 
 
 
 
@@ -50,12 +52,12 @@ Route::prefix('cart')->name('cart.')->group(function(){
 
     Route::get('/'  , [CartController::class , "index"])->name('index');
     Route::post('/{product}/add'  , [CartController::class , "add"])->name('add');
-    Route::path('/{id}/update'  , [CartController::class , "update"])->name('update') ; 
+    Route::patch('/{id}/update'  , [CartController::class , "update"])->name('update') ; 
     Route::delete('/{id}/remove' , [CartController::class ,"remove"])->name('remove') ; 
 
 });
 
-
+    
 Route::middleware(['auth' , "role:customer"])->group(function(){
 
         Route::get('/my-orders' , [OrderController::class , "index"])->name('orders.index')  ; 
@@ -64,5 +66,11 @@ Route::middleware(['auth' , "role:customer"])->group(function(){
 
 });
 
+// Catalog : 
+
+Route::get('/shop', [CatalogController::class, 'index'])->name('shop.catalog');
+
+// product detail 
+Route::get('/product/{slug}', [\App\Http\Controllers\ProductController::class, 'show'])->name('shop.product');
 
 require __DIR__.'/auth.php';

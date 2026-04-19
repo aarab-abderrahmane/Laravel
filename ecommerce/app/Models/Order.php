@@ -18,16 +18,7 @@ class Order extends Model
     ]  ; 
 
 
-    public function user(){
-        // user_id is the column on THIS table (orders)
-         // id is the column on the PARENT table (users)
-        return $this->belongsTo(User::class , "user_d" , "id") ; 
-
-    }
-
-    public function items(){
-        return $this->hasMany(OrderItem::class) ; 
-    }
-
+    public function user() { return $this->belongsTo(User::class); }
+    public function items() { return $this->hasMany(OrderItem::class); }
 
 }

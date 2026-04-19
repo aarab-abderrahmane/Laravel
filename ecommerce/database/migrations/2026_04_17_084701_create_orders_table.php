@@ -18,11 +18,16 @@ return new class extends Migration
                   ->references('id')
                   ->on('users')
                   ->onDelete('cascade') ; 
+                
+            $table->string('order_number')->unique() ; 
+            $table->decimal('total_amount' , 10 , 2 )  ;
 
-            $table->decimal('total_amount' , 10 , 2 )  ; 
-            $table->enum('status' , ['pending' , "completed" , "cancelled"])->default('pending') ; 
-            $table->text("address"); 
-
+            $table->enum('status' , ['pending' ,'processing' ,"shipped", "delivered" , "cancelled"])->default('pending') ; 
+            $table->text('shipping_address') ; 
+            $table->text('billing_address')->nullable() ; 
+            $table->string('payment_method') ; 
+            $table->enum('payment_status' , ['pending' , "paid" ,"failed"])->default('pending') ; 
+            $table->text('notes')->nullable() ; 
             $table->timestamps();
         });
     }

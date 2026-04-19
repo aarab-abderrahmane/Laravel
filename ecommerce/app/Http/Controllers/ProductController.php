@@ -23,14 +23,56 @@ class ProductController extends Controller
 
     }
 
-    public function show($slug){
-        $product = Product::where("slug" ,$slug )->firstOrFail() ; 
+     public function show(string $slug)
+    {
+        $product = Product::with(['category', 'reviews.user'])
+            ->where('slug', $slug)
+            ->where('is_active', true)
+            ->firstOrFail();
 
-        if( ! $product->is_active){
-            abort(404) ; 
+        // Average rating and count
+        $averageRating = $product->reviews()->avg('ratting') ?? 0;
+        $reviewsCount = $product->reviews()->count();
+
+        // Related products
+        $relatedProducts = Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->where('is_active', true)
+            ->inRandomOrder()
+            ->limit(4)
+            ->get();
+
+        // Check if authenticated user has purchased this product (delivered orders only)
+        $hasPurchased = false;
+        $userReview = null;
+        $canReview = false;
+
+        if (auth()->check()) {
+            // Has the user bought this product?
+            $hasPurchased = auth()->user()->orders()
+                ->where('status', 'delivered')
+                ->whereHas('items', function ($query) use ($product) {
+                    $query->where('product_id', $product->id);
+                })->exists();
+
+            // Has the user already reviewed this product?
+            $userReview = $product->reviews()
+                ->where('user_id', auth()->id())
+                ->first();
+
+            // Can review = logged in + purchased + not already reviewed
+            $canReview = $hasPurchased && !$userReview;
         }
 
-        return view('products.show' , compact("product")) ; 
+        return view('shop.product', compact(
+            'product',
+            'averageRating',
+            'reviewsCount',
+            'relatedProducts',
+            'hasPurchased',
+            'userReview',
+            'canReview'
+        ));
     }
 
 

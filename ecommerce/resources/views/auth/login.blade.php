@@ -1,56 +1,78 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@extends('layouts.auth')
+
+@section('title', 'Sign in — Aura Studio')
+
+@section('content')
+    <div class="sketch-wrap">
+        <svg width="60" height="60" viewBox="0 0 60 60" fill="none" stroke="var(--text-main)" stroke-width="1.5" stroke-linecap="round">
+            <path d="M30 10 C15 10, 10 20, 10 30 C10 45, 20 50, 30 50 C45 50, 50 40, 50 30 C50 15, 40 10, 30 10" />
+            <circle cx="30" cy="25" r="7" fill="var(--accent-sage)" fill-opacity="0.1" />
+            <path d="M18 45 C22 38, 38 38, 42 45" />
+        </svg>
+    </div>
+    <h1>Welcome back</h1>
+    <p style="margin-bottom: 32px;">Please enter your details to access your studio account.</p>
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        {{-- Email --}}
+        <div class="form-group">
+            <label for="email">Email address</label>
+            <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="name@email.com" required autofocus>
+            @error('email')
+                <span style="color: var(--accent-terracotta); font-size: 12px;">{{ $message }}</span>
+            @enderror
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-between mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-            <div>
-
-                    <a href="/register">
-                        <x-secondary-button >
-                        Register
-                       </x-secondary-button>
-                    </a>
-
-                    <x-primary-button class="ms-3" >
-                        {{ __('Log in') }}
-                    </x-primary-button>
+        {{-- Password --}}
+        <div class="form-group">
+            <div class="flex-between">
+                <label for="password" style="margin-bottom: 0;">Password</label>
+                @if (Route::has('password.request'))
+                    <a href="{{ route('password.request') }}" class="text-link">Forgot password?</a>
+                @endif
             </div>
-
+            <input id="password" type="password" name="password" placeholder="••••••••" required>
+            <i class="iconoir-eye-empty input-icon" onclick="togglePassword(this)"></i>
+            @error('password')
+                <span style="color: var(--accent-terracotta); font-size: 12px;">{{ $message }}</span>
+            @enderror
         </div>
+
+        {{-- Remember Me --}}
+        <label class="checkbox-container" style="margin-bottom: 24px;">
+            <input type="checkbox" name="remember">
+            <div class="custom-check"></div>
+            <span>Keep me signed in</span>
+        </label>
+
+        <button type="submit" class="btn-submit">Sign in</button>
     </form>
-</x-guest-layout>
+
+    <div class="divider"><span>or continue with</span></div>
+    
+    <button class="btn-ghost"><i class="iconoir-google"></i> Google</button>
+
+    <p style="margin-top: 32px; text-align: center; font-size: 14px;">
+        New to Aura? 
+        <a href="{{ route('register') }}" class="text-link" style="font-weight: 500;">Create an account</a>
+    </p>
+@endsection
+
+@push('scripts')
+<script>
+    function togglePassword(icon) {
+        let input = icon.previousElementSibling;
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('iconoir-eye-empty');
+            icon.classList.add('iconoir-eye-off');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('iconoir-eye-off');
+            icon.classList.add('iconoir-eye-empty');
+        }
+    }
+</script>
+@endpush

@@ -14,18 +14,21 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger("cat_id")    ; 
-            $table->foreign('cat_id')
+            $table->unsignedBigInteger("category_id")    ; 
+            $table->foreign('category_id')
                   ->references('id') 
                   ->on('categories')
                   ->onDelete('cascade') ; 
 
             $table->string('name')  ; 
             $table->string('slug')->unique() ; 
-            $table->text("description")->nullable() ; 
+            $table->text("description") ; 
             $table->decimal('price' , 10 , 2) ; 
             $table->integer('stock_quantity')->default(0) ; 
-            $table->string('image')->nullable() ; 
+            $table->string('origin')->nullable() ; 
+            $table->string('color')->nullable() ; 
+            $table->string('material')->nullable() ; 
+            $table->json('images')->nullable() ; 
             $table->boolean('is_active')->default(true)  ; 
             $table->timestamps();
         });

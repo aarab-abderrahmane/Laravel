@@ -20,6 +20,8 @@ return new class extends Migration
 
             // roles 
             $table->enum('role' , ['admin' ,"customer" , "employee"])->default('customer') ; 
+            $table->string('phone')->nullable() ; 
+            $table->string('avatar')->nullable() ; 
 
             $table->rememberToken();
             $table->timestamps();

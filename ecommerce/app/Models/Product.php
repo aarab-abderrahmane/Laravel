@@ -11,19 +11,31 @@ class Product extends Model
     
     use HasFactory;
 
-    protected $fillable  = [
-        'cat_id' , 
-        'name' , 
-        'slug' , 
-        'description' , 
-        'price' , 
-        "stock_quantity" , 
-        "image" , 
-        "is_active" , 
-    ] ; 
+      protected $fillable = [
+        'name',
+        'slug',
+        'description',
+        'price',
+        'stock_quantity',
+        'category_id',
+        'origin',
+        'color',
+        'material',
+        'images',
+        'is_active',
+    ];
 
-    public function categories(){
+    /**
+     * The attributes that should be cast.
+     */
+    protected $casts = [
+        'images' => 'array',       
+        'price' => 'decimal:2',
+        'is_active' => 'boolean',
+    ];
 
-        return $this->belongsTo(Category::class,'cat_id' , "id") ; 
-    }
+    public function category() { return $this->belongsTo(Category::class); }
+    public function reviews() { return $this->hasMany(Review::class); }
+    public function cartItems() { return $this->hasMany(CartItem::class); }
+
 }
