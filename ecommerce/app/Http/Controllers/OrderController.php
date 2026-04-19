@@ -14,10 +14,25 @@ class OrderController extends Controller
         /**
      * show orders
      */
-    public function index()
+    public function index(Request $request)
     {
-        $orders = auth()->user()->orders()->latest()->paginate(10);
-        return view('orders.index', compact('orders'));
+        $query = auth()->user()->orders();
+
+        // Filter by status
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        // Sort
+        match ($request->input('sort', 'newest')) {
+            'oldest' => $query->oldest(),
+            'highest' => $query->orderBy('total_amount', 'desc'),
+            default => $query->latest(),
+        };
+
+        $orders = $query->paginate(10)->withQueryString();
+
+        return view('profile.orders.index', compact('orders'));
     }
 
     /**
