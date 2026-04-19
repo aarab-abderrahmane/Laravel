@@ -28,6 +28,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+      Route::get('/profile/dashboard', fn() => view('profile.dashboard'))->name('profile.dashboard');
+    Route::get('/profile/orders', [OrderController::class, 'index'])->name('profile.orders');
+    Route::get('/profile/addresses', fn() => view('profile.addresses'))->name('profile.addresses');
+    
 });
 
 
