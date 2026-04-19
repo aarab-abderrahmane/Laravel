@@ -37,6 +37,8 @@ class CatalogController extends Controller
             ->paginate(9)
             ->withQueryString(); // Keep filter parameters in pagination links
 
-        return view('shop.catalog', compact('products', 'categories'));
+        $origins = Product::distinct()->pluck('origin')->filter()->values();
+
+        return view('shop.catalog', compact('products', 'categories' , "origins"));
     }
 }

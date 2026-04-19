@@ -1,40 +1,24 @@
-{{-- @props(['product'])
-
-<a href="{{ route('shop.product', $product->slug) }}" class="product-card">
-    <div class="image-container">
-        @if($product->images && isset($product->images[0]))
-            <img src="{{ asset('storage/' . $product->images[0]) }}" alt="{{ $product->name }}">
-        @else
-            <i class="iconoir-camera" style="font-size: 32px; opacity: 0.2;"></i>
-        @endif
-        <div class="quick-add"><i class="iconoir-plus"></i></div>
-    </div>
-    <div class="product-meta">
-        <div>
-            <h4>{{ $product->name }}</h4>
-            <p>{{ $product->material ?? 'Local' }}</p>
-        </div>
-        <span class="price">${{ number_format($product->price, 2) }}</span>
-    </div>
-</a> --}}
-
-
 @props(['product'])
 
-<a href="{{ route('shop.product', $product->slug) }}" class="product-card">
-    <div class="image-container">
-        @if($product->images && isset($product->images[0]))
-            <img src="{{ $product->images[0]}}" alt="{{ $product->name }}">
-        @else
-            <i class="iconoir-camera" style="font-size: 32px; opacity: 0.2;"></i>
-        @endif
-        <div class="quick-add"><i class="iconoir-plus"></i></div>
-    </div>
-    <div class="product-meta">
-        <div>
-            <h4>{{ $product->name }}</h4>
-            <p>{{ $product->material ?? 'Local' }}</p>
+<article class="product-card">
+    <a href="{{ route('shop.product', $product->slug) }}" style="display: block; text-decoration: none; color: inherit;">
+        <div class="product-image-container">
+            @if($product->images && isset($product->images[0]))
+                <img src="{{ $product->images[0] }}" alt="{{ $product->name }}" loading="lazy">
+            @else
+                <i class="iconoir-camera placeholder-icon"></i>
+            @endif
+            <button class="quick-add-btn" aria-label="Quick add"
+                    onclick="event.preventDefault(); quickAdd({{ $product->id }})">
+                <i class="iconoir-plus"></i>
+            </button>
         </div>
-        <span class="price">${{ number_format($product->price, 2) }}</span>
-    </div>
-</a>
+        <div class="product-info">
+            <h3 class="product-title">{{ $product->name }}</h3>
+            <div class="product-meta">
+                <span>{{ $product->material ?? 'Local Studio' }}, {{ $product->origin ?? 'Kyoto' }}</span>
+                <span>${{ number_format($product->price, 0) }}</span>
+            </div>
+        </div>
+    </a>
+</article>

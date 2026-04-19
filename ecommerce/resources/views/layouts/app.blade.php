@@ -5,54 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Aura Studio')</title>
-    
+
+    {{-- fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css">
-    
-    @vite(['resources/css/app.css'])
-    
+
     <style>
+        /* ==========================================================================
+          variables 
+           ========================================================================== */
         :root {
             --bg-color: #F5F4F0;
             --surface-color: #FFFFFF;
             --text-main: #1A1A18;
             --text-secondary: #6B6A66;
             --border-color: #E8E6E0;
-            --accent-terracotta: #C4613A;
+            --accent-clay: #C4613A;
             --accent-sage: #7A9E7E;
             --accent-sand: #D4C5A9;
-            --font-family: 'Inter', sans-serif;
-            --container-width: 1200px;
+            --font-primary: 'DM Sans', sans-serif;
+            --transition: all 150ms ease-out;
+            --shadow-subtle: 0 2px 8px rgba(0,0,0,0.06);
+            --container-width: 1248px;
             --gutter: 24px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+
         body {
-            font-family: var(--font-family);
+            font-family: var(--font-primary);
             background-color: var(--bg-color);
             color: var(--text-main);
             -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
         }
 
+        a { color: inherit; text-decoration: none; transition: var(--transition); }
+        button, input, select { font-family: inherit; outline: none; }
+
         h1, h2, h3, h4, h5, h6 {
-            font-weight: 400;
+            font-weight: 300;
             letter-spacing: -0.02em;
             color: var(--text-main);
         }
 
         h1 { font-size: 64px; line-height: 1.1; }
         h2 { font-size: 40px; line-height: 1.2; }
-        h3 { font-size: 24px; line-height: 1.3; font-weight: 500; }
-        
-        p, span, li, a {
+        h3 { font-size: 24px; line-height: 1.3; font-weight: 400; }
+
+        p, span, li {
             font-size: 16px;
             line-height: 1.7;
             font-weight: 300;
             color: var(--text-secondary);
-            text-decoration: none;
         }
 
         .container {
@@ -61,59 +68,24 @@
             padding: 0 var(--gutter);
         }
 
-        .grid-12 {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: var(--gutter);
-        }
-
-        section { padding: 100px 0; }
-
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 14px 28px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: transform 0.2s ease-out, background-color 0.2s ease-out;
-            border: 1px solid transparent;
-        }
-
-        .btn-primary {
-            background-color: var(--text-main);
-            color: var(--surface-color);
-        }
-
-        .btn-primary:hover { transform: translateY(-2px); }
-
-        .btn-ghost {
-            background-color: transparent;
-            color: var(--text-main);
-            border: 1px solid var(--text-main);
-        }
-
-        .btn-ghost:hover {
-            background-color: var(--text-main);
-            color: var(--surface-color);
-        }
-
-        /* Header */
+        /* ==========================================================================
+          header and topbar
+           ========================================================================== */
         .top-bar {
-            background-color: var(--bg-color);
+            background-color: var(--text-main);
             border-bottom: 1px solid var(--border-color);
             padding: 8px 0;
+            font-size: 12px;
         }
-        
         .top-bar .container {
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
-
-        .top-bar p { font-size: 12px; }
+        .top-bar p {
+            font-size: 12px;
+            color: var(--surface-color);
+        }
 
         .main-header {
             background-color: rgba(245, 244, 240, 0.98);
@@ -123,22 +95,23 @@
             top: 0;
             z-index: 100;
         }
-
         .main-header .container {
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-
-        .logo { font-size: 24px; font-weight: 500; color: var(--text-main); letter-spacing: -0.04em; }
-
+        .logo {
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--text-main);
+            letter-spacing: -0.04em;
+        }
         .search-bar {
             flex: 1;
             max-width: 400px;
             position: relative;
             margin: 0 40px;
         }
-
         .search-bar input {
             width: 100%;
             padding: 12px 16px 12px 40px;
@@ -150,258 +123,364 @@
             font-size: 14px;
             color: var(--text-main);
         }
-
-        .search-bar input:focus { outline: none; border-color: var(--text-secondary); }
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--text-secondary);
+        }
         .search-bar i {
-            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-            color: var(--text-secondary); font-size: 18px;
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 18px;
         }
-
-        .nav-links { display: flex; gap: 32px; }
-        .nav-links a { color: var(--text-main); font-weight: 400; font-size: 14px; }
-        .nav-links a:hover { color: var(--text-secondary); text-decoration: underline; text-underline-offset: 4px; }
-        .nav-links a.active { font-weight: 500; text-decoration: underline; text-underline-offset: 4px; }
-
-        .header-actions { display: flex; gap: 20px; }
-        .header-actions i { font-size: 22px; color: var(--text-main); cursor: pointer; }
-
-        /* Catalog Page Specific */
-        .page-header {
-            padding: 80px 0 60px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .breadcrumb { font-size: 12px; margin-bottom: 24px; }
-        .breadcrumb a { font-size: 12px; }
-        .breadcrumb span { font-size: 12px; margin: 0 8px; }
-
-        .page-header-content {
+        .nav-links {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
+            gap: 32px;
+        }
+        .nav-links a {
+            color: var(--text-main);
+            font-weight: 400;
+            font-size: 14px;
+        }
+        .nav-links a:hover {
+            color: var(--text-secondary);
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+        .nav-links a.active {
+            font-weight: 500;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+        .header-actions {
+            display: flex;
+            gap: 20px;
+        }
+        .header-actions i {
+            font-size: 22px;
+            color: var(--text-main);
+            cursor: pointer;
         }
 
-        .page-title { max-width: 600px; }
+        /* ==========================================================================
+          catalog components
+           ========================================================================== */
+        .page-header {
+            padding: 100px 0 80px;
+            position: relative;
+        }
 
-        .organic-accent { width: 120px; height: 120px; opacity: 0.8; }
+        .breadcrumb {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            display: flex;
+            gap: 8px;
+        }
 
-        .shop-layout { padding: 60px 0 120px 0; }
+        .page-header p {
+            max-width: 500px;
+            font-size: 18px;
+            color: var(--text-secondary);
+        }
 
-        .sidebar { grid-column: span 3; padding-right: 24px; }
+        .decor-svg {
+            position: absolute;
+            right: 48px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 220px;
+            height: 220px;
+            pointer-events: none;
+        }
+
+        .organic-path {
+            fill: none;
+            stroke: var(--text-secondary);
+            stroke-width: 1.5px;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            opacity: 0.4;
+        }
+
+        .shop-container {
+            display: grid;
+            grid-template-columns: 2fr 10fr;
+            gap: 48px;
+            padding-bottom: 120px;
+        }
+
+        /*filters */
+        .sidebar { padding-top: 8px; }
         .filter-group { margin-bottom: 40px; }
-        .filter-group h3 { font-size: 16px; font-weight: 500; margin-bottom: 16px; }
+        .filter-group h3 {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
         .filter-list { list-style: none; }
-        .filter-list li { margin-bottom: 12px; }
-
-        .checkbox-label {
+        .filter-item {
             display: flex;
             align-items: center;
+            margin-bottom: 12px;
             cursor: pointer;
             font-size: 14px;
             color: var(--text-secondary);
         }
-        .checkbox-label:hover { color: var(--text-main); }
-        .checkbox-label input { position: absolute; opacity: 0; }
-        .checkmark {
-            height: 14px; width: 14px; border: 1px solid var(--border-color);
-            border-radius: 2px; margin-right: 12px; background: var(--surface-color);
+        .filter-item:hover { color: var(--text-main); }
+        .filter-checkbox {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-right: 12px;
+            background: var(--surface-color);
+            transition: var(--transition);
         }
-        .checkbox-label input:checked ~ .checkmark { border-color: var(--text-main); }
-        .checkbox-label input:checked ~ .checkmark::after {
-            content: ""; display: block; width: 6px; height: 6px;
-            background: var(--text-main); border-radius: 1px;
+        .filter-checkbox:checked {
+            background: var(--text-main);
+            border-color: var(--text-main);
+        }
+        .filter-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 1px;
+            width: 4px;
+            height: 8px;
+            border: solid var(--surface-color);
+            border-width: 0 1px 1px 0;
+            transform: rotate(45deg);
         }
 
-        .products-area { grid-column: span 9; }
+        /* products section*/
+        .products-area { }
         .sorting-bar {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 32px; font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+        .sort-dropdown {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .sort-dropdown select {
-            background: transparent; border: none; font-family: var(--font-family);
-            font-size: 14px; color: var(--text-main); cursor: pointer;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 14px;
+            cursor: pointer;
         }
 
         .products-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 40px 24px;
+            gap: 24px;
         }
 
+        /* product card*/
         .product-card {
-            display: flex; flex-direction: column; background: transparent;
-            border: none; cursor: pointer; position: relative;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
         }
-
-        .product-card .image-container {
-            height: 360px; background: var(--surface-color);
-            border: 1px solid var(--border-color); border-radius: 8px;
-            margin-bottom: 16px; overflow: hidden;
-            transition: transform 0.2s, box-shadow 0.2s;
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-subtle);
         }
-
-        .product-card:hover .image-container {
-            transform: translateY(-2px); box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-
-        .quick-add {
-            position: absolute; bottom: 80px; right: 16px;
-            width: 36px; height: 36px; border-radius: 50%;
-            background: var(--surface-color); border: 1px solid var(--border-color);
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; transform: translateY(10px); transition: all 0.2s;
-        }
-        .product-card:hover .quick-add { opacity: 1; transform: translateY(0); }
-        .quick-add:hover { background: var(--text-main); color: var(--surface-color); }
-
-        .product-meta { display: flex; justify-content: space-between; }
-        .product-card h4 { font-size: 16px; color: var(--text-main); margin-bottom: 4px; }
-        .product-card p { font-size: 14px; }
-        .product-card .price { font-size: 14px; color: var(--text-main); }
-
-        /* Pagination */
-        .pagination {
-            display: flex; justify-content: center; align-items: center;
-            margin-top: 80px; gap: 16px;
-        }
-        .pagination a {
-            display: flex; align-items: center; justify-content: center;
-            width: 32px; height: 32px; font-size: 14px;
-        }
-        .pagination a.active {
-            color: var(--text-main); font-weight: 500;
-            border-bottom: 1px solid var(--text-main);
-        }
-        .pagination-arrow { padding: 0 8px; }
-
-        /* Product Detail Page Specific (from index.html) */
-        .product-hero { padding-top: 60px; padding-bottom: 80px; }
-
-        .product-gallery { grid-column: span 7; display: grid; gap: 16px; }
-        .main-image { height: 600px; border-radius: 8px; overflow: hidden; background: #EFEFEA; }
-        .main-image img { width: 100%; height: 100%; object-fit: cover; }
-        .thumbnail-list { display: flex; gap: 16px; }
-        .thumbnail {
-            width: 80px; height: 100px; border-radius: 4px; cursor: pointer;
-            overflow: hidden; background: #EFEFEA;
-        }
-        .thumbnail img { width: 100%; height: 100%; object-fit: cover; }
-
-        .product-info {
-            grid-column: span 5; padding-left: 24px;
-            display: flex; flex-direction: column; justify-content: center;
-        }
-
-        .product-title { margin-bottom: 16px; }
-        .product-price { font-size: 24px; color: var(--text-main); margin-bottom: 24px; }
-
-        .rating { display: flex; align-items: center; gap: 8px; margin-bottom: 32px; }
-        .rating i { font-size: 16px; }
-
-        .product-desc { margin-bottom: 40px; }
-
-        .add-to-cart-wrapper { display: flex; gap: 16px; margin-bottom: 24px; }
-        .qty-selector {
-            display: flex; align-items: center; border: 1px solid var(--border-color);
-            border-radius: 4px; padding: 0 16px;
-        }
-        .qty-selector button {
-            background: none; border: none; font-size: 18px; cursor: pointer;
-            color: var(--text-main); padding: 8px 0;
-        }
-        .qty-selector span { margin: 0 20px; color: var(--text-main); }
-        .btn-add { flex: 1; }
-
-        .stock-status {
-            display: flex; align-items: center; gap: 8px; font-size: 14px;
-        }
-        .stock-status i { color: var(--accent-sage); }
-
-        /* Accordion */
-        .product-details { border-top: 1px solid var(--border-color); padding: 80px 0; }
-        .accordion { max-width: 800px; margin: 0 auto; }
-        .accordion-item { border-bottom: 1px solid var(--border-color); }
-        .accordion-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 24px 0; cursor: pointer; background: none; border: none;
-            width: 100%; text-align: left;
-        }
-        .accordion-header h3 { font-size: 20px; }
-        .accordion-content {
-            max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out;
-        }
-        .accordion-content p { padding-bottom: 24px; }
-
-        /* Highlights */
-        .visual-info {
-            background-color: var(--surface-color);
-            border-top: 1px solid var(--border-color);
+        .product-image-container {
+            height: 320px;
+            background: var(--bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
             border-bottom: 1px solid var(--border-color);
         }
-        .highlight-item { grid-column: span 4; text-align: center; padding: 40px; }
-        .sketch-icon { width: 64px; height: 64px; margin: 0 auto 24px; }
-        .highlight-item h3 { font-size: 18px; margin-bottom: 12px; }
-
-        /* Reviews */
-        .reviews { background-color: var(--bg-color); }
-        .review-header {
-            display: flex; justify-content: space-between; align-items: flex-end;
-            margin-bottom: 60px;
+        .product-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
-        .review-list { display: grid; gap: 32px; }
-        .review-item { border-bottom: 1px solid var(--border-color); padding-bottom: 32px; }
-        .review-meta { display: flex; justify-content: space-between; margin-bottom: 16px; }
-        .review-author { color: var(--text-main); font-weight: 500; }
-        .review-date { font-size: 14px; }
-
-        /* Related Products */
-        .section-header { margin-bottom: 48px; }
-        .product-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+        .placeholder-icon {
+            font-size: 32px;
+            color: var(--border-color);
+            stroke-width: 1px;
         }
-        .product-grid .product-card .image-container { height: 300px; }
+        .quick-add-btn {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            width: 40px;
+            height: 40px;
+            background: var(--text-main);
+            color: var(--surface-color);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .product-card:hover .quick-add-btn {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .product-info { padding: 20px; }
+        .product-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: var(--text-main);
+        }
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
 
-        /* Footer */
-        footer {
-            background-color: var(--surface-color);
+        /* pagination*/
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin-top: 64px;
+        }
+        .page-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            border-radius: 4px;
+        }
+        .page-link.active {
+            color: var(--text-main);
+            font-weight: 500;
+        }
+        .page-link:not(.disabled):hover {
+            background: var(--border-color);
+            color: var(--text-main);
+        }
+        .page-link.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* ==========================================================================
+          footer 
+           ========================================================================== */
+        .footer {
+             background-color: var(--surface-color);
             border-top: 1px solid var(--border-color);
             padding: 80px 0 40px;
         }
         .footer-grid {
-            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 40px; margin-bottom: 80px;
+            display: grid;
+            grid-template-columns: 4fr 2fr 2fr 2fr;
+            gap: 48px;
+            margin-bottom: 80px;
         }
-        .footer-col h5 { font-size: 14px; font-weight: 500; margin-bottom: 24px; }
-        .footer-col ul { list-style: none; }
-        .footer-col li { margin-bottom: 12px; }
-        .footer-col a { font-size: 14px; transition: color 0.2s; }
-        .footer-col a:hover { color: var(--text-main); }
-        .newsletter-form { display: flex; margin-top: 16px; gap: 8px; }
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+        .footer-col p { font-size: 13px; margin-bottom: 24px; }
+        .newsletter-form {
+            display: flex;
+            gap: 8px;
+            max-width: 320px;
+        }
         .newsletter-form input {
-            flex: 1; padding: 12px; border: 1px solid var(--border-color);
-            background: transparent; border-radius: 4px; font-size: 14px;
+            flex: 1;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            padding: 10px 16px;
+            font-size: 13px;
+            border-radius: 4px;
         }
-        .bottom-line {
-            border-top: 1px solid var(--border-color); padding-top: 32px;
-            display: flex; justify-content: space-between;
+        .btn-filled {
+            background: var(--text-main);
+            color: var(--surface-color);
+            border: none;
+            padding: 0 24px;
+            font-size: 13px;
+            border-radius: 4px;
+            cursor: pointer;
         }
-        .social-links { display: flex; gap: 16px; }
-        .social-links i { font-size: 20px; color: var(--text-main); }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { font-size: 13px; color: var(--text-secondary); }
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+        .social-links { display: flex; gap: 20px; }
+        .social-links a { color: var(--text-secondary); font-size: 18px; }
 
-        /* Responsive */
+        /* ==========================================================================
+          optimization
+           ========================================================================== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 4px;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+        .btn-primary {
+            background: var(--text-main);
+            color: var(--surface-color);
+        }
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--text-main);
+        }
+
+        /* ==========================================================================
+          responsive 
+           ========================================================================== */
         @media (max-width: 992px) {
-            .sidebar { grid-column: span 12; }
-            .products-area { grid-column: span 12; }
+            .shop-container { grid-template-columns: 1fr; }
             .products-grid { grid-template-columns: repeat(2, 1fr); }
-            .product-grid { grid-template-columns: repeat(2, 1fr); }
-            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .footer-grid { grid-template-columns: repeat(2, 1fr); }
+            .decor-svg { display: none; }
         }
         @media (max-width: 768px) {
             h1 { font-size: 40px; }
-            .grid-12 { grid-template-columns: 1fr; }
-            .product-gallery, .product-info { grid-column: span 1; padding-left: 0; }
-            .products-grid, .product-grid { grid-template-columns: 1fr; }
-            .page-header-content { flex-direction: column; align-items: flex-start; }
+            .nav-menu { display: none; }
+            .search-box { display: none; }
+            .products-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .top-bar { flex-direction: column; gap: 8px; }
         }
     </style>
     @stack('styles')
@@ -419,57 +498,57 @@
     </div>
 
     <header class="main-header">
-        <div class="container">
-            <a href="{{ url('/') }}" class="logo">Aura.</a>
-            
-            <nav class="nav-links">
-                <a href="{{ route('shop.catalog') }}">Men</a>
-                <a href="{{ route('shop.catalog') }}">Women</a>
-                <a href="{{ route('shop.catalog') }}" class="{{ request()->routeIs('shop.catalog') ? 'active' : '' }}">Objects</a>
-                <a href="#">Editorial</a>
-            </nav>
+    <div class="container">
+        <a href="{{ url('/') }}" class="logo">Aura.</a>
+        
+        <nav class="nav-links">
+            <a href="{{ route('shop.catalog') }}">Men</a>
+            <a href="{{ route('shop.catalog') }}">Women</a>
+            <a href="{{ route('shop.catalog') }}" class="{{ request()->routeIs('shop.catalog') ? 'active' : '' }}">Objects</a>
+            <a href="#">Editorial</a>
+        </nav>
 
-            <div class="search-bar">
-                <i class="iconoir-search"></i>
-                <input type="text" placeholder="Search catalog..." name="search" form="search-form">
-            </div>
-
-            <div class="header-actions">
-                @auth
-                    <a href="{{ route('profile.edit') }}"><i class="iconoir-user"></i></a>
-                    <a href="{{ route('cart.index') }}"><i class="iconoir-shopping-bag"></i></a>
-                    <form method="POST" action="{{ route('logout') }}" style="display:inline;">
-                        @csrf
-                        <button type="submit" style="background:none; border:none; cursor:pointer; padding:0;">
-                            <i class="iconoir-log-out"></i>
-                        </button>
-                    </form>
-                @else
-                    <a href="{{ route('login') }}"><i class="iconoir-user"></i></a>
-                    <a href="{{ route('cart.index') }}"><i class="iconoir-shopping-bag"></i></a>
-                @endauth
-            </div>
+        <div class="search-bar">
+            <i class="iconoir-search"></i>
+            <input type="text" placeholder="Search catalog...">
         </div>
-    </header>
+
+        <div class="header-actions">
+            @auth
+                <a href="{{ route('profile.edit') }}"><i class="iconoir-user"></i></a>
+                <a href="{{ route('cart.index') }}"><i class="iconoir-shopping-bag"></i></a>
+                <form method="POST" action="{{ route('logout') }}" style="display:inline;">
+                    @csrf
+                    <button type="submit" style="background:none; border:none; cursor:pointer; padding:0;">
+                        <i class="iconoir-log-out"></i>
+                    </button>
+                </form>
+            @else
+                <a href="{{ route('login') }}"><i class="iconoir-user"></i></a>
+                <a href="{{ route('cart.index') }}"><i class="iconoir-shopping-bag"></i></a>
+            @endauth
+        </div>
+    </div>
+</header>
 
     <main>
         @yield('content')
     </main>
 
-    <footer>
+    <footer class="footer">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-col">
-                    <h5>Aura Journal</h5>
-                    <p style="font-size: 14px; margin-bottom: 16px;">Subscribe to our irregular dispatches on design, architecture, and slow living.</p>
-                    <form class="newsletter-form">
+                    <h4>Aura Journal</h4>
+                    <p>Subscribe to our irregular dispatches on design, architecture, and slow living.</p>
+                    <form class="newsletter-form" onsubmit="event.preventDefault();">
                         <input type="email" placeholder="Email address">
-                        <button type="button" class="btn btn-ghost" style="padding: 10px 16px;">Join</button>
+                        <button type="submit" class="btn-filled">Join</button>
                     </form>
                 </div>
                 <div class="footer-col">
-                    <h5>Shop</h5>
-                    <ul>
+                    <h4>Shop</h4>
+                    <ul class="footer-links">
                         <li><a href="#">New arrivals</a></li>
                         <li><a href="#">Objects</a></li>
                         <li><a href="#">Textiles</a></li>
@@ -477,8 +556,8 @@
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h5>Assistance</h5>
-                    <ul>
+                    <h4>Assistance</h4>
+                    <ul class="footer-links">
                         <li><a href="#">Contact</a></li>
                         <li><a href="#">Shipping & returns</a></li>
                         <li><a href="#">Care guide</a></li>
@@ -486,8 +565,8 @@
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h5>Studio</h5>
-                    <ul>
+                    <h4>Studio</h4>
+                    <ul class="footer-links">
                         <li><a href="#">About us</a></li>
                         <li><a href="#">Journal</a></li>
                         <li><a href="#">Stockists</a></li>
@@ -495,8 +574,8 @@
                     </ul>
                 </div>
             </div>
-            <div class="bottom-line">
-                <p style="font-size: 12px;">© {{ date('Y') }} Aura Studio. All rights reserved.</p>
+            <div class="footer-bottom">
+                <div class="copyright">&copy; {{ date('Y') }} Aura Studio. All rights reserved.</div>
                 <div class="social-links">
                     <a href="#"><i class="iconoir-instagram"></i></a>
                     <a href="#"><i class="iconoir-pinterest"></i></a>

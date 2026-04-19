@@ -31,7 +31,7 @@ class ProductController extends Controller
             ->firstOrFail();
 
         // Average rating and count
-        $averageRating = $product->reviews()->avg('ratting') ?? 0;
+        $averageRating = $product->reviews()->avg('rating') ?? 0;
         $reviewsCount = $product->reviews()->count();
 
         // Related products
